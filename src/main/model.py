@@ -1,29 +1,15 @@
-import os
 import csv
-import cv2
-import img as img
-import keras
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from PIL import Image
 
+import matplotlib.image as mpimg
+import numpy as np
+import tensorflow as tf
+from keras import backend as K
+from keras.layers import Conv2D
+from keras.layers import Dense, Dropout, Activation, Flatten
+from keras.layers import MaxPooling2D
+from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
-from keras.layers import Conv2D
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation, Flatten, SpatialDropout2D, ELU, LSTM
-from keras.layers import Convolution2D, MaxPooling2D, Cropping2D
-from keras.layers.core import Lambda
-from keras import backend as K
-
-from keras.optimizers import SGD, Adam, RMSprop
-from keras.utils import np_utils
-
-from keras.callbacks import ModelCheckpoint
-
-from keras.models import model_from_json
 
 ## 1. Prepare and create generator
 
@@ -50,7 +36,7 @@ def add_to_samples(csv_filepath, samples):
     return samples
 
 
-samples = add_to_samples('dataset.csv', samples)
+samples = add_to_samples('dataset_new.csv', samples)
 
 # Remove header - No header in our dataset
 # samples = samples[1:]
@@ -72,17 +58,18 @@ def generator(samples, batch_size=32):
             for batch_sample in batch_samples:
                 label = batch_sample[1]
                 name = format(batch_sample[0])
-                # print("(Name,Label):  ", name, " , ", label)
                 if label == "1":
                     name = genuine_directory + "/" + name
                 else:
                     name = forge_directory + "/" + name
                 center_image = mpimg.imread(name)
+                center_image = tf.image.resize_images(center_image, [height, width])
                 images.append(center_image)
                 labels.append(label)
 
             x_train = np.array(images)
             y_train = np.array(labels)
+            print(x_train)
             yield shuffle(x_train, y_train)
 
 
@@ -135,16 +122,10 @@ model.fit_generator(train_generator,
                     validation_data=validation_generator,
                     nb_val_samples=len(validation_samples), nb_epoch=nb_epoch)
 
-# model.fit_generator(
-#     train_generator,
-#     steps_per_epoch=batch_size // batch_size,
-#     epochs=nb_epoch,
-#     validation_data=validation_generator,
-#     validation_steps=batch_size // batch_size)
-
 model_json = model.to_json()
-with open("model.json", "w") as json_file:
+with open("model_new_json.json", "w") as json_file:
     json_file.write(model_json)
 
-model.save_weights("model.h5")
+model.save("model_new_saved.h5")
+model.save_weights("model_new_weights.h5")
 print("Saved model to disk")
