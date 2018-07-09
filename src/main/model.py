@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+from PIL import Image
 
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
@@ -34,7 +35,7 @@ forge_directory = "data/forged"
 height = 100
 width = 100
 # The number of channels in our input images (1  for grayscale single channel images, 3  for standard RGB images)
-depth = 1
+depth = 4
 input_shape = (height, width, depth)
 # if we are using "channels first", update the input shape
 if K.image_data_format() == "channels_first":
@@ -67,25 +68,21 @@ def generator(samples, batch_size=32):
         for offset in range(0, num_samples, batch_size):
             batch_samples = samples[offset:offset + batch_size]
             images = []
-            angles = []
+            labels = []
             for batch_sample in batch_samples:
-                center_angle = float(batch_sample[1])
+                label = batch_sample[1]
                 name = format(batch_sample[0])
-                if name.__contains__("png"):
-                    if center_angle == 1:
-                        name = genuine_directory + "/" + name
-                    else:
-                        name = forge_directory + "/" + name
+                # print("(Name,Label):  ", name, " , ", label)
+                if label == "1":
+                    name = genuine_directory + "/" + name
                 else:
-                    continue
+                    name = forge_directory + "/" + name
                 center_image = mpimg.imread(name)
-                print(name)
                 images.append(center_image)
-                angles.append(center_angle)
+                labels.append(label)
 
             x_train = np.array(images)
-            y_train = np.array(angles)
-
+            y_train = np.array(labels)
             yield shuffle(x_train, y_train)
 
 
@@ -130,14 +127,13 @@ nb_epoch = 50
 
 # Train model using generator
 
-print(generator(train_samples))
-print(generator(validation_samples))
+print(train_generator)
+print(validation_generator)
 
 model.fit_generator(train_generator,
                     samples_per_epoch=len(train_samples),
                     validation_data=validation_generator,
                     nb_val_samples=len(validation_samples), nb_epoch=nb_epoch)
-
 
 # model.fit_generator(
 #     train_generator,
