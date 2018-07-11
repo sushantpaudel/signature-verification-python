@@ -62,12 +62,12 @@ def generator(samples, batch_size=32):
                 else:
                     name = forge_directory + "/" + name
                 center_image = mpimg.imread(name)
+                # center_image = tf.image.resize_images(center_image, [height, width])
                 images.append(center_image)
                 labels.append(label)
 
             x_train = np.array(images)
             y_train = np.array(labels)
-            print(x_train)
             yield shuffle(x_train, y_train)
 
 
@@ -121,8 +121,9 @@ model.fit_generator(train_generator,
                     nb_val_samples=len(validation_samples), nb_epoch=nb_epoch)
 
 model_json = model.to_json()
-with open("model.json", "w") as json_file:
+with open("model_new_json.json", "w") as json_file:
     json_file.write(model_json)
-model.save("model_with_weights.h5")
-model.save_weights("model_weights_only.h5")
+
+model.save("model_new_saved.h5")
+model.save_weights("model_new_weights.h5")
 print("Saved model to disk")

@@ -41,10 +41,10 @@ def create_model():
     model_inside.compile(loss='binary_crossentropy',
                          optimizer='rmsprop',
                          metrics=['accuracy'])
-    return
+    return model_inside
 
 
-model = create_model_input()
+model = create_model()
 
 
 def check_signature(path):
