@@ -50,7 +50,6 @@ model = create_model()
 def check_signature(path):
     images = [mpimg.imread(path)]
     x_test = np.array(images)
-    print(model.predict(x_test)[0][0])
     return model.predict(x_test)[0][0]
 
 
@@ -60,8 +59,8 @@ def verify_image(test_image):
     return model.predict(x_test)[0][0]
 
 
-def output(value):
-    if value == 1.0:
+def output(path):
+    if check_signature(path) == 1.0:
         return "This signature is genuine!!"
     else:
         return "This signature is forged!!"
@@ -70,22 +69,23 @@ def output(value):
 # pre_process = PreProcessing()
 # image = pre_process.pre_process(check_path + "forged1.png")
 # verify_image(image)
+def funct1():
+    print("Forged: ", output(check_path + "forged1.png"))
+    print("Forged: ", output(check_path + "forged2.png"))
+    print("Forged: ", output(check_path + "forged3.png"))
+    print("Forged: ", output(check_path + "forged4.png"))
+    print("Forged: ", output(check_path + "forged5.png"))
+    print("Forged: ", output(check_path + "forged6.png"))
+    print("Forged: ", output(check_path + "forged7.png"))
+    print("____________________________________________________________")
+    print("")
+    print("Genuine: ", output(check_path + "genuine1.png"))
+    print("Genuine: ", output(check_path + "genuine2.png"))
+    print("Genuine: ", output(check_path + "genuine3.png"))
+    print("Genuine: ", output(check_path + "genuine4.png"))
+    print("Genuine: ", output(check_path + "genuine5.png"))
+    print("Genuine: ", output(check_path + "genuine6.png"))
+    print("Genuine: ", output(check_path + "genuine7.png"))
 
 
-print("Forged: ", output(check_signature(check_path + "forged1.png")))
-print("Forged: ", output(check_signature(check_path + "forged2.png")))
-print("Forged: ", output(check_signature(check_path + "forged3.png")))
-print("Forged: ", output(check_signature(check_path + "forged4.png")))
-print("Forged: ", output(check_signature(check_path + "forged5.png")))
-print("Forged: ", output(check_signature(check_path + "forged6.png")))
-print("Forged: ", output(check_signature(check_path + "forged7.png")))
-print("Forged: ", output(check_signature(check_path + "forged8.png")))
-print("____________________________________________________________")
-print("")
-print("Genuine: ", output(check_signature(check_path + "genuine1.png")))
-print("Genuine: ", output(check_signature(check_path + "genuine2.png")))
-print("Genuine: ", output(check_signature(check_path + "genuine3.png")))
-print("Genuine: ", output(check_signature(check_path + "genuine4.png")))
-print("Genuine: ", output(check_signature(check_path + "genuine5.png")))
-print("Genuine: ", output(check_signature(check_path + "genuine6.png")))
-print("Genuine: ", output(check_signature(check_path + "genuine7.png")))
+funct1()

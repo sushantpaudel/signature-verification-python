@@ -67,7 +67,6 @@ def generator(samples, batch_size=32):
 
             x_train = np.array(images)
             y_train = np.array(labels)
-            print(x_train)
             yield shuffle(x_train, y_train)
 
 
@@ -92,6 +91,7 @@ model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
 model.add(Flatten())
+
 model.add(Dense(64))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))

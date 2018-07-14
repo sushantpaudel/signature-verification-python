@@ -19,7 +19,7 @@ data = get_genuine_file_names() + get_forged_file_names()
 shuffle(data)
 print(data)
 
-file = open("dataset_new.csv", "w+")
+file = open("dataset.csv", "w+")
 for str in data:
     file.write("%s\n" % str)
 
